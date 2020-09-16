@@ -1,34 +1,35 @@
 import React, { CSSProperties, useState } from 'react';
 import FlareComponent from 'flare-react';
-import cactus from './Choup.flr';
+import choup from './Choup.flr';
+import choupi from './Choupi.flr';
+import Draggable from './Draggable';
 
 const size = 200
 
 function App() {
 
+  const [chou] = useState(Math.random() >= 0.5)
   const [grabbed, setGrabbed] = useState(false)
-  const [XY, setXY] = useState({ x: window.innerWidth/2 - size/2, y: window.innerHeight/3 - size/2 })
 
-  const mouseMoved = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (grabbed) {
-      setXY({ x: e.clientX - size / 2, y: e.clientY - size / 2 })
-    }
+  const handleDrag = () => {
+    setGrabbed(true)
   }
 
-  const bim: CSSProperties = {
-    position: "absolute",
-    left: XY.x,
-    top: XY.y,
-    width: size,
-    height: size
+  const handleDragEnd = () => {
+    setGrabbed(false)
   }
 
   return (
-    <div style={center} onMouseMove={(e) => mouseMoved(e)}>
+    <div style={center}>
+      <div style={{ height: 300 }} />
       <div style={text}>Click and drop me !</div>
-      <div style={bim} onClick={() => setGrabbed(!grabbed)}>
-        <FlareComponent width={200} height={200} transparent={true} animationName={grabbed ? "Grabbed" : "Flying"} file={cactus} />
-      </div>
+      <Draggable id={1}
+        onDrag={() => null}
+        onDragbegin={handleDrag}
+        onDragEnd={handleDragEnd}>
+        <FlareComponent width={200} height={200} transparent={true} animationName={grabbed ? "Grabbed" : "Flying"} file={chou ? choup : choupi} />
+      </Draggable>
+
     </div>
   );
 
@@ -45,6 +46,7 @@ const center: CSSProperties = {
   width: "100%",
   height: "100vh",
   backgroundColor: "lightgrey",
+  flexDirection: "column"
 }
 
 export default App;
